@@ -5,11 +5,12 @@ import viteLogo from './assets/vite.svg';
 import './App.css';
 import PendingVerifications from './PendingVerifications';
 import AlumniSignup from './AlumniSignup';
+import GoogleLogin from './GoogleLogin';
 
 function App() {
   const [count, setCount] = useState(0);
   const [testData, setTestData] = useState([]);
-  const [view, setView] = useState("home"); // "home", "pending", or "alumniSignup"
+  const [view, setView] = useState("home");
 
   useEffect(() => {
     fetch('http://localhost:3000/api/test')
@@ -32,6 +33,15 @@ function App() {
       <div>
         <button onClick={() => setView("home")}>← Back</button>
         <AlumniSignup />
+      </div>
+    );
+  }
+
+  if (view === "googleLogin") {
+    return (
+      <div>
+        <button onClick={() => setView("home")}>← Back</button>
+        <GoogleLogin />
       </div>
     );
   }
@@ -64,6 +74,10 @@ function App() {
         <br /><br />
         <button onClick={() => setView("alumniSignup")}>
           Alumni Signup (test view)
+        </button>
+        <br /><br />
+        <button onClick={() => setView("googleLogin")}>
+          Google Sign-In (test view)
         </button>
       </section>
     </>
