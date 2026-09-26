@@ -3,10 +3,12 @@ import heroImg from './assets/hero.png';
 import reactLogo from './assets/react.svg';
 import viteLogo from './assets/vite.svg';
 import './App.css';
+import PendingVerifications from './PendingVerifications';
 
 function App() {
   const [count, setCount] = useState(0);
   const [testData, setTestData] = useState([]);
+  const [view, setView] = useState("home"); // "home" or "pending"
 
   useEffect(() => {
     fetch('http://localhost:3000/api/test')
@@ -14,6 +16,15 @@ function App() {
       .then((data) => setTestData(data))
       .catch((err) => console.error(err));
   }, []);
+
+  if (view === "pending") {
+    return (
+      <div>
+        <button onClick={() => setView("home")}>← Back</button>
+        <PendingVerifications />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -35,6 +46,10 @@ function App() {
           onClick={() => setCount((count) => count + 1)}
         >
           Count is {count}
+        </button>
+        <br /><br />
+        <button onClick={() => setView("pending")}>
+          View Pending Alumni Verifications (Registrar test view)
         </button>
       </section>
     </>
