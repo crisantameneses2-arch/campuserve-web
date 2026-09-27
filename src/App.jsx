@@ -6,6 +6,11 @@ import './App.css';
 import PendingVerifications from './PendingVerifications';
 import AlumniSignup from './AlumniSignup';
 import GoogleLogin from './GoogleLogin';
+import DocumentRequestForm from './DocumentRequestForm';
+import DocumentRequestsReview from './DocumentRequestsReview';
+
+
+
 
 function App() {
   const [count, setCount] = useState(0);
@@ -13,11 +18,17 @@ function App() {
   const [view, setView] = useState("home");
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/test')
-      .then((res) => res.json())
-      .then((data) => setTestData(data))
-      .catch((err) => console.error(err));
-  }, []);
+  fetch('http://localhost:3000/api/test')
+    .then((res) => {
+      if (!res.ok) throw new Error(`Server responded ${res.status}`);
+      return res.json();
+    })
+    .then((data) => setTestData(Array.isArray(data) ? data : []))
+    .catch((err) => console.error('Failed to fetch test data:', err));
+}, []);
+
+
+
 
   if (view === "pending") {
     return (
@@ -46,6 +57,24 @@ function App() {
     );
   }
 
+  if (view === "documentRequestForm") {
+    return (
+      <div>
+        <button onClick={() => setView("home")}>← Back</button>
+        <DocumentRequestForm />
+      </div>
+    );
+  }
+
+  if (view === "documentRequestsReview") {
+    return (
+      <div>
+        <button onClick={() => setView("home")}>← Back</button>
+        <DocumentRequestsReview />
+      </div>
+    );
+  }
+
   return (
     <>
       <section id="center">
@@ -60,25 +89,19 @@ function App() {
             <p key={row.id}>{row.message}</p>
           ))}
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
+        <button type="button" className="counter" onClick={() => setCount((count) => count + 1)}>
           Count is {count}
         </button>
         <br /><br />
-        <button onClick={() => setView("pending")}>
-          View Pending Alumni Verifications (Registrar test view)
-        </button>
+        <button onClick={() => setView("pending")}>View Pending Alumni Verifications</button>
         <br /><br />
-        <button onClick={() => setView("alumniSignup")}>
-          Alumni Signup (test view)
-        </button>
+        <button onClick={() => setView("alumniSignup")}>Alumni Signup</button>
         <br /><br />
-        <button onClick={() => setView("googleLogin")}>
-          Google Sign-In (test view)
-        </button>
+        <button onClick={() => setView("googleLogin")}>Google Sign-In</button>
+        <br /><br />
+        <button onClick={() => setView("documentRequestForm")}>Request a Document</button>
+        <br /><br />
+        <button onClick={() => setView("documentRequestsReview")}>Review Document Requests (Registrar)</button>
       </section>
     </>
   );
